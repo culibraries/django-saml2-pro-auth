@@ -20,7 +20,7 @@ def saml_login(request):
     attributes = None
     req = prepare_django_request(request)
     auth = init_saml_auth(req)
-
+    print(request.session['samlUserdata'])
     if 'acs' in req['get_data']:
         # IDP initiated
         request_id = None
@@ -40,6 +40,7 @@ def saml_login(request):
             request.session['samlNameId'] = auth.get_nameid()
             request.session['samlSessionIndex'] = auth.get_session_index()
             attributes = request.session['samlUserdata'].items()
+            print(request.session['samlUserdata'])
             user = authenticate(request=request)
             if user is None:
                 if hasattr(settings, 'SAML_FAIL_REDIRECT'):

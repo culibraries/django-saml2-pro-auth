@@ -19,6 +19,7 @@ def saml_login(request):
     req = prepare_django_request(request)
     auth = init_saml_auth(req)
     # print(request.session['samlUserdata'])
+    print('**************start bugging')
     print(req['get_data'])
     if 'acs' in req['get_data']:
         # IDP initiated

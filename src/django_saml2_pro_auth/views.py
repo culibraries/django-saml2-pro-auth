@@ -13,14 +13,12 @@ from .utils import (get_provider_config,
                     init_saml_auth, prepare_django_request)
 
 
-
-
 @csrf_exempt
 def saml_login(request):
     attributes = None
     req = prepare_django_request(request)
     auth = init_saml_auth(req)
-    #print(request.session['samlUserdata'])
+    # print(request.session['samlUserdata'])
     if 'acs' in req['get_data']:
         # IDP initiated
         request_id = None
@@ -45,8 +43,11 @@ def saml_login(request):
             if user is None:
                 if hasattr(settings, 'SAML_FAIL_REDIRECT'):
                     return HttpResponseRedirect(settings.SAML_FAIL_REDIRECT)
-                raise SAMLError('FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
+                raise SAMLError(
+                    'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
             login(request, user)
+            next_url = request.GET.get('next', settings.SAML_REDIRECT)
+            print(next_url)
             if hasattr(settings, 'SAML_REDIRECT'):
                 return HttpResponseRedirect(settings.SAML_REDIRECT)
             elif 'RelayState' in req['post_data'] and OneLogin_Saml2_Utils.get_self_url(req) != req['post_data']['RelayState']:
@@ -62,12 +63,13 @@ def saml_login(request):
         elif REDIRECT_FIELD_NAME in req['get_data']:
             return HttpResponseRedirect(auth.login(return_to=req['get_data'][REDIRECT_FIELD_NAME]))
         elif 'RelayState' in req['post_data']:
-                return HttpResponseRedirect(auth.redirect_to(req['post_data']['RelayState']))
+            return HttpResponseRedirect(auth.redirect_to(req['post_data']['RelayState']))
         else:
             redir = OneLogin_Saml2_Utils.get_self_url(req)
             return HttpResponseRedirect(auth.login(return_to=redir))
     else:
         return HttpResponseRedirect(auth.login())
+
 
 def metadata(request):
     req = prepare_django_request(request)

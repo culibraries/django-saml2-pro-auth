@@ -50,8 +50,17 @@ def saml_login(request):
                 raise SAMLError(
                     'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
             login(request, user)
+            # print(user)
+            # user_groups = []
+            # samlUserdata = request.session['samlUserdata']
+            # if 'samlUserdata' in request.session:
+            #     samlUserdata = request.session['samlUserdata']
+            #     if "urn:oid:1.3.6.1.4.1.632.11.2.200" in samlUserdata:
+            #         grouper = samlUserdata['urn:oid:1.3.6.1.4.1.632.11.2.200']
+            #         user_groups = list(set(user_groups+grouper))
+            # user_groups.sort()
             print(user)
-            jwt_token = jwt_encode(user+{'test': 'test'})
+            jwt_token = jwt_encode(user)
             print(jwt_token)
             if 'next_url' in request.session:
                 return HttpResponseRedirect(request.session['next_url'])

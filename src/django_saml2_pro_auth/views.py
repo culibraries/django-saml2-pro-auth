@@ -19,6 +19,8 @@ def saml_login(request):
     req = prepare_django_request(request)
     auth = init_saml_auth(req)
     # print(request.session['samlUserdata'])
+    print('*****ok test****')
+    print(req['get_data'])
     if 'acs' in req['get_data']:
         # IDP initiated
         request_id = None
@@ -46,8 +48,12 @@ def saml_login(request):
                 raise SAMLError(
                     'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
             login(request, user)
+            print('*****ok test inside acs****')
+            print(req['get_data'])
+            print(req['get_data']['next'])
             if 'next' in req['get_data']:
                 next_url = req['get_data']['next']
+                print(next_url)
                 return HttpResponseRedirect(next_url)
             if hasattr(settings, 'SAML_REDIRECT'):
                 return HttpResponseRedirect(settings.SAML_REDIRECT)

@@ -11,6 +11,7 @@ from onelogin.saml2.utils import OneLogin_Saml2_Utils
 from .utils import SAMLError, SAMLSettingsError
 from .utils import (get_provider_config,
                     init_saml_auth, prepare_django_request)
+from rest_auth.utils import jwt_encode
 
 
 @csrf_exempt
@@ -19,9 +20,6 @@ def saml_login(request):
     req = prepare_django_request(request)
     auth = init_saml_auth(req)
     next_url = ''
-    print(req['get_data'])
-    # print(req['get_data']['next'])
-    # request.session['next_url'] = req['get_data']['next']
 
     if 'next' in req['get_data']:
         request.session['next_url'] = req['get_data']['next']
@@ -45,6 +43,7 @@ def saml_login(request):
             request.session['samlSessionIndex'] = auth.get_session_index()
             attributes = request.session['samlUserdata'].items()
             print(request.session['samlUserdata'])
+            print(attributes)
             user = authenticate(request=request)
             if user is None:
                 if hasattr(settings, 'SAML_FAIL_REDIRECT'):
@@ -52,6 +51,8 @@ def saml_login(request):
                 raise SAMLError(
                     'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
             login(request, user)
+            jwt_token = jwt_encode('dutr5288')
+            print(jwt_token)
             if 'next_url' in request.session:
                 return HttpResponseRedirect(request.session['next_url'])
             if hasattr(settings, 'SAML_REDIRECT'):

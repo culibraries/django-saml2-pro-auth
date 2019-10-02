@@ -5,7 +5,7 @@ from sys import version_info
 
 __version__ = '0.0.10'
 __title__ = 'django-saml2-pro-auth'
-__version_info__ = __version__ 
+__version_info__ = __version__
 __author__ = 'Jonathan Davila'
 __author_email__ = 'jonathan@davila.io'
 __license__ = 'MIT'
@@ -49,7 +49,10 @@ if __name__ == "__main__":
         },
         install_requires=[
             'python3-saml',
-            'six'
+            'six',
+            'djangorestframework-jwt',
+            'django-rest-auth'
+
         ],
         tests_require=[
             'django',

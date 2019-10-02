@@ -49,7 +49,10 @@ def saml_login(request):
                     return HttpResponseRedirect(settings.SAML_FAIL_REDIRECT)
                 raise SAMLError(
                     'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
+
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
+
             # print(user)
             # user_groups = []
             # samlUserdata = request.session['samlUserdata']
@@ -59,11 +62,13 @@ def saml_login(request):
             #         grouper = samlUserdata['urn:oid:1.3.6.1.4.1.632.11.2.200']
             #         user_groups = list(set(user_groups+grouper))
             # user_groups.sort()
-            print(user)
+            # print(user)
             jwt_token = jwt_encode(user)
             print(jwt_token)
+            query = '?uid={}&token={}'.format(user.id, jwt_token)
+            print(query)
             if 'next_url' in request.session:
-                return HttpResponseRedirect(request.session['next_url'])
+                return HttpResponseRedirect(request.session['next_url']+query)
             if hasattr(settings, 'SAML_REDIRECT'):
                 return HttpResponseRedirect(settings.SAML_REDIRECT)
             elif 'RelayState' in req['post_data'] and OneLogin_Saml2_Utils.get_self_url(req) != req['post_data']['RelayState']:

@@ -89,8 +89,7 @@ class Backend(object):  # pragma: no cover
         else:
             user, _ = User.objects.get_or_create(
                 defaults=final_map, **lookup_map)
-        user.groups = 'test'
-        print(user)
+
         if user.is_active:
             return user
 

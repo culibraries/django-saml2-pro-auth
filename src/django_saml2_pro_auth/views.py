@@ -21,8 +21,11 @@ def saml_login(request):
     next_url = ''
     print(req['get_data'])
     print(req['get_data']['next'])
-    if 'next' in req['get_data']:
-        next_url = req['get_data']['next']
+    request.session['next_url'] = req['get_data']['next']
+
+    # if 'next' in req['get_data']:
+    #     next_url = req['get_data']['next']
+    #     request.session['next_url'] = req['get_data']['next']
     if 'acs' in req['get_data']:
         # IDP initiated
         request_id = None
@@ -50,7 +53,8 @@ def saml_login(request):
                 raise SAMLError(
                     'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
             login(request, user)
-            print(next_url)
+            print('good here')
+            print(request.session['next_url'])
             if not next_url:
                 return HttpResponseRedirect(next_url)
             if hasattr(settings, 'SAML_REDIRECT'):

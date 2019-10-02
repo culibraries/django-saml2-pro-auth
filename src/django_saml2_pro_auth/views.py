@@ -48,6 +48,7 @@ def saml_login(request):
                 raise SAMLError(
                     'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
             login(request, user)
+            print(next_url)
             if not next_url:
                 return HttpResponseRedirect(next_url)
             if hasattr(settings, 'SAML_REDIRECT'):

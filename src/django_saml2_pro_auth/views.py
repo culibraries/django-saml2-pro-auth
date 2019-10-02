@@ -19,8 +19,6 @@ def saml_login(request):
     req = prepare_django_request(request)
     auth = init_saml_auth(req)
     # print(request.session['samlUserdata'])
-    print('**************start bugging')
-    print(req['get_data'])
     if 'acs' in req['get_data']:
         # IDP initiated
         request_id = None
@@ -48,8 +46,9 @@ def saml_login(request):
                 raise SAMLError(
                     'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
             login(request, user)
-            next_url = req.GET.get('next', settings.SAML_REDIRECT)
-            print(next_url)
+            if 'next' in req['get_data']:
+                next_url = req['get_data']['next']
+                return HttpResponseRedirect(next_url)
             if hasattr(settings, 'SAML_REDIRECT'):
                 return HttpResponseRedirect(settings.SAML_REDIRECT)
             elif 'RelayState' in req['post_data'] and OneLogin_Saml2_Utils.get_self_url(req) != req['post_data']['RelayState']:

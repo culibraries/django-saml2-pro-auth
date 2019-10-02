@@ -19,6 +19,8 @@ def saml_login(request):
     req = prepare_django_request(request)
     auth = init_saml_auth(req)
     next_url = ''
+    print(req['get_data'])
+    print(req['get_data']['next'])
     if 'next' in req['get_data']:
         next_url = req['get_data']['next']
     if 'acs' in req['get_data']:

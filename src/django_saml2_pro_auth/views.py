@@ -51,7 +51,7 @@ def saml_login(request):
                     'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
             login(request, user)
             print(user)
-            jwt_token = jwt_encode(user)
+            jwt_token = jwt_encode(user+{'test': 'test'})
             print(jwt_token)
             if 'next_url' in request.session:
                 return HttpResponseRedirect(request.session['next_url'])

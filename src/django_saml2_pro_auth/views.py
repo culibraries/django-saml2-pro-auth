@@ -2,7 +2,7 @@ from django.conf import settings
 from django.http import (HttpResponse, HttpResponseRedirect,
                          HttpResponseServerError)
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login, REDIRECT_FIELD_NAME
+from django.contrib.auth import authenticate, login, REDIRECT_FIELD_NAME, get_user_model
 
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
@@ -20,7 +20,6 @@ def saml_login(request):
     req = prepare_django_request(request)
     auth = init_saml_auth(req)
     next_url = ''
-
     if 'next' in req['get_data']:
         request.session['next_url'] = req['get_data']['next']
     if 'acs' in req['get_data']:
@@ -51,7 +50,8 @@ def saml_login(request):
                 raise SAMLError(
                     'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
             login(request, user)
-            jwt_token = jwt_encode(request.session['samlUserdata'])
+            print(user)
+            jwt_token = jwt_encode(user)
             print(jwt_token)
             if 'next_url' in request.session:
                 return HttpResponseRedirect(request.session['next_url'])

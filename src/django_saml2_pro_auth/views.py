@@ -12,6 +12,8 @@ from .utils import SAMLError, SAMLSettingsError
 from .utils import (get_provider_config,
                     init_saml_auth, prepare_django_request)
 from rest_auth.utils import jwt_encode
+import jwt
+import json
 
 
 @csrf_exempt
@@ -50,7 +52,7 @@ def saml_login(request):
                 raise SAMLError(
                     'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
 
-            user.backend = 'django.contrib.auth.backends.ModelBackend'
+            # user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
 
             # print(user)
@@ -63,7 +65,12 @@ def saml_login(request):
             #         user_groups = list(set(user_groups+grouper))
             # user_groups.sort()
             # print(user)
-            jwt_token = jwt_encode(user)
+            # jwt_token = jwt_encode(user)
+            payload = {
+                'id': user.id,
+                'email': user.email,
+            }
+            jwt_token = {'token': jwt.encode(payload)}
             print(jwt_token)
             query = '?uid={}&token={}'.format(user.id, jwt_token)
             print(query)

@@ -70,7 +70,7 @@ def saml_login(request):
                 'id': user.id,
                 'email': user.email,
             }
-            jwt_token = {'token': jwt.encode(payload)}
+            jwt_token = {'token': jwt.encode(payload, "SECRET_KEY")}
             print(jwt_token)
             query = '?uid={}&token={}'.format(user.id, jwt_token)
             print(query)

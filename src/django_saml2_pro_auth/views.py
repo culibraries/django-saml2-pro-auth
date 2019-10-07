@@ -68,7 +68,7 @@ def saml_login(request):
             # jwt_token = jwt_encode(user)
             payload = {
                 'id': user.id,
-                'email': user.email,
+                'email': 'test@gmail.com',
             }
             jwt_token = {'token': jwt.encode(payload, "SECRET_KEY")}
             print(jwt_token)

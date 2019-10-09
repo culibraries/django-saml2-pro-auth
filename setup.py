@@ -49,9 +49,7 @@ if __name__ == "__main__":
         },
         install_requires=[
             'python3-saml',
-            'six',
-            'djangorestframework-jwt',
-            'django-rest-auth'
+            'six'
         ],
         tests_require=[
             'django',

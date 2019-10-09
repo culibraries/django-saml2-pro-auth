@@ -11,9 +11,6 @@ from onelogin.saml2.utils import OneLogin_Saml2_Utils
 from .utils import SAMLError, SAMLSettingsError
 from .utils import (get_provider_config,
                     init_saml_auth, prepare_django_request)
-from rest_auth.utils import jwt_encode
-import jwt
-import json
 
 
 @csrf_exempt
@@ -51,29 +48,7 @@ def saml_login(request):
                     return HttpResponseRedirect(settings.SAML_FAIL_REDIRECT)
                 raise SAMLError(
                     'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
-
-            # user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
-
-            # print(user)
-            # user_groups = []
-            # samlUserdata = request.session['samlUserdata']
-            # if 'samlUserdata' in request.session:
-            #     samlUserdata = request.session['samlUserdata']
-            #     if "urn:oid:1.3.6.1.4.1.632.11.2.200" in samlUserdata:
-            #         grouper = samlUserdata['urn:oid:1.3.6.1.4.1.632.11.2.200']
-            #         user_groups = list(set(user_groups+grouper))
-            # user_groups.sort()
-            # print(user)
-            # jwt_token = jwt_encode(user)
-            payload = {
-                'id': user.id,
-                'email': 'test@gmail.com',
-            }
-            jwt_token = {'token': jwt.encode(payload, "SECRET_KEY")}
-            print(jwt_token)
-            query = '?uid={}&token={}'.format(user.id, jwt_token)
-            print(query)
             if 'next_url' in request.session:
                 return HttpResponseRedirect(request.session['next_url']+query)
             if hasattr(settings, 'SAML_REDIRECT'):

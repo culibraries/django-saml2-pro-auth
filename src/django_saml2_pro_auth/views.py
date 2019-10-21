@@ -50,7 +50,7 @@ def saml_login(request):
                     'FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
             login(request, user)
             if 'next_url' in request.session:
-                return HttpResponseRedirect(request.session['next_url']+query)
+                return HttpResponseRedirect(request.session['next_url'])
             if hasattr(settings, 'SAML_REDIRECT'):
                 return HttpResponseRedirect(settings.SAML_REDIRECT)
             elif 'RelayState' in req['post_data'] and OneLogin_Saml2_Utils.get_self_url(req) != req['post_data']['RelayState']:

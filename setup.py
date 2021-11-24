@@ -48,7 +48,7 @@ if __name__ == "__main__":
             '': 'src',
         },
         install_requires=[
-            'python3-saml',
+            'python3-saml==1.11',
             'six'
         ],
         tests_require=[
